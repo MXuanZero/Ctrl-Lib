@@ -39,6 +39,7 @@ typedef struct lib_timer_t {
 #if LIB_USE_SELF_DATA
 	void *user_data;
 #endif // LIB_USE_SELF_DATA
+	uint32_t run_time;
 	lib_timer_status state;
 	LIB_TIMER_UNIT period;
 	LIB_TIMER_UNIT timeout;
