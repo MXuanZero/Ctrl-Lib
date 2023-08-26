@@ -78,17 +78,17 @@ extern "C" {
 	     (n) != NULL; (n) = (t), (t) = ((n) != NULL ? (n)->next : NULL))
 
 /* Exported types ------------------------------------------------------------*/
-struct _lib_note_t;
-struct _lib_list_t;
+struct lib_note;
+struct lib_list;
 
-typedef struct _lib_note_t {
-	struct _lib_note_t *next;
-	struct _lib_note_t *prev;
+typedef struct lib_note {
+	struct lib_note *next;
+	struct lib_note *prev;
 } lib_node_t;
 
-typedef struct _lib_list_t {
-	struct _lib_note_t *head;
-	struct _lib_note_t *tail;
+typedef struct lib_list {
+	struct lib_note *head;
+	struct lib_note *tail;
 	size_t size;
 } lib_list_t;
 
