@@ -187,7 +187,7 @@ float m_sinf(float x)
 	/* fractional value calculation */
 	fract = findex - (float)index;
 
-	/* Read two nearest values of input value from the sin table */
+	/* read two nearest values of input value from the sin table */
 	a = m_sin_table_f[index];
 	b = m_sin_table_f[index + 1];
 
@@ -236,7 +236,7 @@ float m_cosf(float x)
 	/* fractional value calculation */
 	fract = findex - (float)index;
 
-	/* Read two nearest values of input value from the cos table */
+	/* read two nearest values of input value from the cos table */
 	a = m_sin_table_f[index];
 	b = m_sin_table_f[index + 1];
 

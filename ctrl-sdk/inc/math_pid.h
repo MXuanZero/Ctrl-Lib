@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "ctrl_defs.h"
+
 #include "math_base.h"
 
 typedef struct math_pid_t {
