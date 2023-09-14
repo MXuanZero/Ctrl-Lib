@@ -63,7 +63,7 @@ static inline void hal_store_del_node(uint16_t uid, hal_store_node_t *node)
 hal_store_status hal_store_init(void)
 {
 	hal_store_init_list();
-	Hal_Store_Prot_Init();
+	hal_store_port_init();
 	return HAL_STORE_OK;
 }
 
@@ -169,7 +169,7 @@ hal_store_status hal_store_get_size(uint16_t uid, uint32_t *size)
 	return HAL_STORE_OK;
 }
 
-hal_store_status hal_store_replace_cb(uint16_t uid, hal_store_update_cb fn)
+hal_store_status hal_store_set_cb(uint16_t uid, hal_store_update_cb fn)
 {
 	hal_store_info_t *info = NULL;
 	HAL_STORE_LOCK();
@@ -183,9 +183,9 @@ hal_store_status hal_store_replace_cb(uint16_t uid, hal_store_update_cb fn)
 	return HAL_STORE_OK;
 }
 
-hal_store_status hal_store_del_update_cb_fn(uint16_t uid)
+hal_store_status hal_store_del_update_cb(uint16_t uid)
 {
-	return hal_store_replace_cb(uid, NULL);
+	return hal_store_set_cb(uid, NULL);
 }
 
 /**
