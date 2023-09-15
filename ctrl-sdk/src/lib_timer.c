@@ -1,17 +1,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "lib_timer.h"
-#include "lib_tick.h"
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private typedef -----------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static lib_list_t lib_timer_groups = { 0 };
 /* Private function prototypes -----------------------------------------------*/
-static inline LIB_TIMER_UNIT lib_timer_get_millis(void);
 static inline void lib_timer_fsm(lib_timer_t *timer);
 /* Private functions ---------------------------------------------------------*/
-void lib_timer_init(lib_timer_t *timer, LIB_TIMER_UNIT period,
-		    LIB_TIMER_UNIT timeout, lib_timer_callback_fn cb_fn)
+void lib_timer_init(lib_timer_t *timer, time_us_t period, time_us_t timeout,
+		    lib_timer_callback_fn cb_fn)
 {
 	if (timer == NULL) {
 		return;
@@ -48,25 +46,20 @@ void lib_timer_reg(lib_timer_group_t *group, lib_timer_t *timer)
 	lib_list_inc_tail(list, node);
 }
 
-static inline LIB_TIMER_UNIT lib_timer_get_millis(void)
+static inline uint32_t lib_timer_get_micros(void)
 {
-	return lib_get_millis();
-}
-
-static inline uint32_t lib_timer_get_tick(void)
-{
-	return lib_get_tick();
+	return lib_get_micros();
 }
 
 static inline void lib_timer_fsm(lib_timer_t *timer)
 {
 	uint32_t start_time;
 	lib_timer_event event;
-	LIB_TIMER_UNIT temp;
-	LIB_TIMER_UNIT ms = lib_timer_get_millis();
+	time_us_t temp;
+	time_us_t us = lib_timer_get_micros();
 	switch (timer->state) {
 	case LIB_TIMER_READY:
-		temp = ms - timer->last_run;
+		temp = us - timer->last_run;
 		if (temp < timer->period) {
 			return;
 		}
@@ -75,24 +68,24 @@ static inline void lib_timer_fsm(lib_timer_t *timer)
 		} else {
 			event = LIB_TIMER_NORMAL;
 		}
-		timer->last_run = ms;
-		start_time = lib_timer_get_tick();
+		timer->last_run = us;
+		start_time = lib_timer_get_micros();
 		if (timer->cb_fn != NULL) {
 #if LIB_USE_SELF_DATA == 1
 			timer->cb_fn(event, timer->user_data);
 #else
 			timer->cb_fn(event, NULL);
 #endif
-			timer->run_time = lib_timer_get_tick() - start_time;
+			timer->run_time = lib_timer_get_micros() - start_time;
 		} else {
 			/* error */
 			timer->run_time = 0;
 		}
 		break;
 	case LIB_TIMER_DELAY:
-		temp = ms - timer->last_run;
+		temp = us - timer->last_run;
 		if (temp < LIB_TIMER_PERIOD_MAX) {
-			timer->last_run = ms;
+			timer->last_run = us;
 			timer->state = LIB_TIMER_READY;
 		}
 		break;
@@ -126,24 +119,23 @@ void lib_timer_group_handler(void)
 	}
 }
 
-lib_timer_error lib_timer_delay(lib_timer_t *timer, LIB_TIMER_UNIT ms)
+lib_timer_error lib_timer_delay(lib_timer_t *timer, time_us_t us)
 {
-	if (timer == NULL || ms == 0 || ms > LIB_TIMER_PERIOD_MAX) {
+	if (timer == NULL || us == 0 || us > LIB_TIMER_PERIOD_MAX) {
 		return LIB_TIEMR_ERROR;
 	}
 	if (timer->state == LIB_TIMER_STOP) {
 		return LIB_TIMER_OK;
 	}
-	LIB_TIMER_UNIT tick = lib_timer_get_millis();
+	time_us_t tick = lib_timer_get_micros();
 	timer->state = LIB_TIMER_DELAY;
-	timer->last_run = tick - ms;
+	timer->last_run = tick - us;
 	return LIB_TIMER_OK;
 }
 
-lib_timer_error lib_timer_group_delay(lib_timer_group_t *group,
-				      LIB_TIMER_UNIT ms)
+lib_timer_error lib_timer_group_delay(lib_timer_group_t *group, time_us_t us)
 {
-	if (group == NULL || ms == 0 || ms > LIB_TIMER_PERIOD_MAX) {
+	if (group == NULL || us == 0 || us > LIB_TIMER_PERIOD_MAX) {
 		return LIB_TIEMR_ERROR;
 	}
 	lib_timer_t *timer;
@@ -153,9 +145,9 @@ lib_timer_error lib_timer_group_delay(lib_timer_group_t *group,
 		if (timer->state == LIB_TIMER_STOP) {
 			continue;
 		}
-		LIB_TIMER_UNIT tick = lib_timer_get_millis();
+		time_us_t tick = lib_timer_get_micros();
 		timer->state = LIB_TIMER_DELAY;
-		timer->last_run = tick - ms;
+		timer->last_run = tick - us;
 	}
 	return LIB_TIMER_OK;
 }
@@ -169,5 +161,5 @@ void lib_timer_stop(lib_timer_t *timer)
 void lib_timer_restart(lib_timer_t *timer)
 {
 	timer->state = LIB_TIMER_READY;
-	timer->last_run = lib_timer_get_millis();
+	timer->last_run = lib_timer_get_micros();
 }

@@ -2,12 +2,19 @@
 #define LIB_TICK_H
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+#include "lib_cfg.h"
 /* Define --------------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define LIB_TIME_MS(ms) ((ms) * 1000)
+#define LIB_TIME_US(us) (us)
+#define LIB_TIME_HZ(hz) (1000000 / (hz))
 /* Exported typedef ----------------------------------------------------------*/
+typedef uint32_t time_us_t;
+typedef uint32_t time_ms_t;
+typedef int32_t time_delta_t;
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-void lib_update_clock(uint32_t ms);
-uint32_t lib_get_millis(void);
-uint32_t lib_get_tick(void);
+void lib_update_clock(time_us_t us);
+time_ms_t lib_get_millis(void);
+time_us_t lib_get_micros(void);
 #endif // LIB_TICK_H
