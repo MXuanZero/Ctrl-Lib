@@ -56,7 +56,7 @@ void button_init_stiaic(button_t *btn, uint8_t id, uint32_t lpt, uint32_t dct,
 	btn->callback_fn = cb_fn;
 }
 
-void hal_button_reg(button_group_t *btn_group, button_t *btn)
+void button_reg(button_group_t *btn_group, button_t *btn)
 {
 	if (btn_group == NULL || btn == NULL) {
 		return;
@@ -91,55 +91,55 @@ void button_update_tick(button_group_t *btn_group, uint32_t tick)
 
 			if (state != btn->last_state) {
 				btn->last_state = state;
-				BUTTON_BIT_CLEAR(btn->event, HAL_BUTTON_NORMAL);
+				BUTTON_BIT_CLEAR(btn->event, BUTTON_NORMAL);
 				if (state) {
 					// 按下
 					btn->press_time = btn_group->tick;
-					BUTTON_BIT_SET(btn->event,HAL_BUTTON_DOWN);
+					BUTTON_BIT_SET(btn->event, BUTTON_DOWN);
 				} else {
 					// 抬起
-					BUTTON_BIT_SET(btn->event,HAL_BUTTON_UP);
-					if (btn_group->tick - btn->press_time >btn->long_press_time
+					BUTTON_BIT_SET(btn->event, BUTTON_UP);
+					if (btn_group->tick - btn->press_time > btn->long_press_time
 					    && btn->long_press_time != 0) {
-						BUTTON_BIT_SET(btn->event, HAL_BUTTON_LONG_PRESS);
+						BUTTON_BIT_SET(btn->event, BUTTON_LONG_PRESS);
 					} else if (btn->double_click_time > 0) {
 						// 双击
 						btn->double_click_time = 0;
-						BUTTON_BIT_SET(btn->event, HAL_BUTTON_DOUBLE_CLICK);
+						BUTTON_BIT_SET(btn->event, BUTTON_DOUBLE_CLICK);
 					} else {
 						// 单击
 						if (btn->double_click_time == 0) {
 							btn->double_click_time = btn->double_click_interval_time;
 						}
-						BUTTON_BIT_SET(btn->event, HAL_BUTTON_CLICK);
+						BUTTON_BIT_SET(btn->event, BUTTON_CLICK);
 					}
 				}
 			} else {
-				BUTTON_BIT_SET(btn->event, HAL_BUTTON_NORMAL);
-				BUTTON_BIT_SET(btn->event, HAL_BUTTON_DOWN_PRESS);
+				BUTTON_BIT_SET(btn->event, BUTTON_NORMAL);
+				BUTTON_BIT_SET(btn->event, BUTTON_DOWN_PRESS);
 			}
 		}
 #endif
 		if (state != btn->last_state) {
 			btn->last_state = state;
-			BUTTON_BIT_CLEAR(btn->event, HAL_BUTTON_NORMAL);
+			BUTTON_BIT_CLEAR(btn->event, BUTTON_NORMAL);
 			if (state) {
 				// 按下
 				btn->press_time = btn_group->tick;
-				BUTTON_BIT_SET(btn->event, HAL_BUTTON_DOWN);
+				BUTTON_BIT_SET(btn->event, BUTTON_DOWN);
 			} else {
 				// 抬起
-				BUTTON_BIT_SET(btn->event, HAL_BUTTON_UP);
+				BUTTON_BIT_SET(btn->event, BUTTON_UP);
 				if (btn_group->tick - btn->press_time > btn->long_press_time
 				    && btn->long_press_time != 0) {
-					BUTTON_BIT_SET(btn->event, HAL_BUTTON_LONG_PRESS);
+					BUTTON_BIT_SET(btn->event, BUTTON_LONG_PRESS);
 				} else { // 单击
-					BUTTON_BIT_SET(btn->event, HAL_BUTTON_CLICK);
+					BUTTON_BIT_SET(btn->event, BUTTON_CLICK);
 				}
 			}
 		} else if (state == 1) {
-			BUTTON_BIT_CLEAR(btn->event, HAL_BUTTON_NORMAL);
-			BUTTON_BIT_SET(btn->event, HAL_BUTTON_DOWN_PRESS);
+			BUTTON_BIT_CLEAR(btn->event, BUTTON_NORMAL);
+			BUTTON_BIT_SET(btn->event, BUTTON_DOWN_PRESS);
 		}
 	}
 }
@@ -152,11 +152,11 @@ void button_handler(button_group_t *btn_group)
 	}
 
 	for (button_t *btn = btn_group->first; btn != NULL; btn = btn->next) {
-		if (BUTTON_BIT_READ(btn->event, HAL_BUTTON_NORMAL) ||
+		if (BUTTON_BIT_READ(btn->event, BUTTON_NORMAL) ||
 		    btn->callback_fn == NULL) {
 			continue; // Hal_Button_Normal置1说明没有任何事件产生
 		}
-		for (button_event i = HAL_BUTTON_UP; i < HAL_BUTTON_EVENT_MAX;
+		for (button_event i = BUTTON_UP; i < BUTTON_EVENT_MAX;
 		     ++i) {
 			if (BUTTON_BIT_READ(btn->event, i)) {
 				btn->callback_fn(i);
@@ -164,6 +164,6 @@ void button_handler(button_group_t *btn_group)
 		}
 
 		btn->event = 0;
-		BUTTON_BIT_SET(btn->event, HAL_BUTTON_NORMAL);
+		BUTTON_BIT_SET(btn->event, BUTTON_NORMAL);
 	}
 }

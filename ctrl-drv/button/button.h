@@ -18,14 +18,14 @@ extern "C" {
 
 /* typedef */
 typedef enum {
-	HAL_BUTTON_NORMAL = 0, // 无时间
-	HAL_BUTTON_UP, // 抬起瞬间
-	HAL_BUTTON_DOWN, // 按下瞬间
-	HAL_BUTTON_DOWN_PRESS, // 按下中
-	HAL_BUTTON_CLICK, // 点击事件
-	HAL_BUTTON_LONG_PRESS, // 长按事件
-	HAL_BUTTON_DOUBLE_CLICK, // 双击事件
-	HAL_BUTTON_EVENT_MAX,
+	BUTTON_NORMAL = 0, // 无时间
+	BUTTON_UP, // 抬起瞬间
+	BUTTON_DOWN, // 按下瞬间
+	BUTTON_DOWN_PRESS, // 按下中
+	BUTTON_CLICK, // 点击事件
+	BUTTON_LONG_PRESS, // 长按事件
+	BUTTON_DOUBLE_CLICK, // 双击事件
+	BUTTON_EVENT_MAX,
 } button_event;
 
 typedef void (*button_callback_fn)(button_event);
@@ -69,7 +69,7 @@ void button_init_stiaic(button_t *btn, uint8_t id, uint32_t lpt,
 /**
  * @brief 按键注册函数
  */
-void hal_button_reg(button_group_t *btn_group, button_t *btn);
+void button_reg(button_group_t *btn_group, button_t *btn);
 
 /**
  * @brief 按键时间更新
