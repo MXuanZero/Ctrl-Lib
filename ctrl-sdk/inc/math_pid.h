@@ -8,7 +8,7 @@ extern "C" {
 #include <stdint.h>
 
 #include "math_base.h"
-
+#include "ctrl_defs.h"
 typedef struct math_pid_t {
 	float kp; // P
 	float ki; // I

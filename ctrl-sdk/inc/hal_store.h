@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h>
 #include "hal_cfg.h"
 #include "lib_list.h"
-
+#include "ctrl_defs.h"
 /* Define --------------------------------------------------------------------*/
 #define HAL_STORE_READ_PRESERVE 1
 #define HAL_STORE_WRITE_PRESERVE 1

@@ -3,6 +3,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "lib_cfg.h"
+#include "ctrl_defs.h"
 /* Define --------------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 #define LIB_TIME_MS(ms) ((ms) * 1000)
@@ -15,6 +16,6 @@ typedef int32_t time_delta_t;
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void lib_update_clock(time_us_t us);
-time_ms_t lib_get_millis(void);
-time_us_t lib_get_micros(void);
+time_ms_t lib_get_ms(void);
+time_us_t lib_get_us(void);
 #endif // LIB_TICK_H

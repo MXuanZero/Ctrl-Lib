@@ -16,7 +16,7 @@ void lib_timer_init(lib_timer_t *timer, time_us_t period, time_us_t timeout,
 	}
 	timer->period = period;
 	timer->timeout = timeout;
-	timer->cb_fn = cb_fn;
+	timer->fn = cb_fn;
 	timer->node.next = NULL;
 	timer->node.prev = NULL;
 }
@@ -38,7 +38,7 @@ void lib_timer_reg(lib_timer_group_t *group, lib_timer_t *timer)
 	if (group == NULL || timer == NULL) {
 		return;
 	}
-	if (timer->cb_fn == NULL) {
+	if (timer->fn == NULL) {
 		return;
 	}
 	lib_list_t *list = &group->list;
@@ -48,7 +48,7 @@ void lib_timer_reg(lib_timer_group_t *group, lib_timer_t *timer)
 
 static inline uint32_t lib_timer_get_micros(void)
 {
-	return lib_get_micros();
+	return lib_get_us();
 }
 
 static inline void lib_timer_fsm(lib_timer_t *timer)
@@ -70,11 +70,11 @@ static inline void lib_timer_fsm(lib_timer_t *timer)
 		}
 		timer->last_run = us;
 		start_time = lib_timer_get_micros();
-		if (timer->cb_fn != NULL) {
+		if (timer->fn != NULL) {
 #if LIB_USE_SELF_DATA == 1
-			timer->cb_fn(event, timer->user_data);
+			timer->fn(event, timer->user_data);
 #else
-			timer->cb_fn(event, NULL);
+			timer->fn(event, NULL);
 #endif
 			timer->run_time = lib_timer_get_micros() - start_time;
 		} else {

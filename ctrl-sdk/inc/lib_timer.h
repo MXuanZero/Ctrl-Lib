@@ -3,6 +3,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "lib_list.h"
 #include "lib_tick.h"
+#include "ctrl_defs.h"
 /* Define --------------------------------------------------------------------*/
 #define LIB_TIMER_PERIOD_MAX (UINT32_MAX >> 1)
 #define LIB_USE_SELF_DATA 1
@@ -35,7 +36,7 @@ typedef void (*lib_timer_callback_fn)(lib_timer_event event, void *user_data);
  */
 typedef struct lib_timer_t {
 	lib_node_t node;
-	lib_timer_callback_fn cb_fn;
+	lib_timer_callback_fn fn;
 #if LIB_USE_SELF_DATA
 	void *user_data;
 #endif // LIB_USE_SELF_DATA
