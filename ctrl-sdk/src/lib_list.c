@@ -14,7 +14,7 @@ void lib_list_init(lib_list_t *list, size_t size)
 	}
 	list->head = NULL;
 	list->tail = NULL;
-	size       = (size + 3) & (~0x3);
+	size = (size + 3) & (~0x3);
 	list->size = size;
 }
 
@@ -116,8 +116,7 @@ void lib_list_delete(lib_list_t *list, lib_node_t *node)
 }
 
 void lib_list_change_node(lib_list_t *olist, lib_list_t *nlist,
-			  lib_node_t *node,
-			 bool head)
+			  lib_node_t *node, bool head)
 {
 	if (olist == NULL || nlist == NULL || node == NULL) {
 		return;
@@ -149,7 +148,7 @@ void lib_list_change_node(lib_list_t *olist, lib_list_t *nlist,
 }
 
 void lib_list_move_node(lib_list_t *list, lib_node_t *act, lib_node_t *node,
-		       bool before)
+			bool before)
 {
 	if (list == NULL || act == NULL || node == NULL) {
 		return;
