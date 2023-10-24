@@ -113,7 +113,7 @@ void hal_ccp_protocol_parse(uint8_t *pack, uint16_t pack_size)
 	answer = (((head->order) >> (0)) & 0x01);
 
 	if (answer == 1) {
-		/* ���յ������ź� */
+		/* 接收到请求信号 */
 		switch (order) {
 		case HAL_CCP_ORDER_GET_PARAM:
 			hal_ccp_answer_get_store_param(
@@ -131,7 +131,7 @@ void hal_ccp_protocol_parse(uint8_t *pack, uint16_t pack_size)
 			break;
 		}
 	} else {
-		/* ���յ�Ӧ���ź� */
+		/* 接收到应答信号 */
 		switch (order) {
 		case HAL_CCP_ORDER_GET_PARAM:
 			hal_ccp_rx_answer_get_store_param(
