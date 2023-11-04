@@ -56,6 +56,14 @@ void button_init_stiaic(button_t *btn, uint8_t id, uint32_t lpt, uint32_t dct,
 	btn->callback_fn = cb_fn;
 }
 
+void button_set_read_io(button_group_t *btn_group, button_read_io_fn fn)
+{
+	if (btn_group == NULL) {
+		return;
+	}
+	btn_group->read_io_fn = fn;
+}
+
 void button_reg(button_group_t *btn_group, button_t *btn)
 {
 	if (btn_group == NULL || btn == NULL) {
@@ -82,7 +90,7 @@ void button_update_tick(button_group_t *btn_group, uint32_t tick)
 	}
 	btn_group->tick += tick;
 	for (button_t *btn = btn_group->first; btn != NULL; btn = btn->next) {
-		bool state = button_prot_read_io(btn->id);
+		bool state = btn_group->read_io_fn(btn->id);
 #if BUTTON_DOUBLE_CLICK_ENABLE == 1 // 用一个if判断双击方便阅读，不要改动
 		if (btn->double_click_interval_time != 0) {
 			if (btn->double_click_time != 0) {
@@ -156,8 +164,7 @@ void button_handler(button_group_t *btn_group)
 		    btn->callback_fn == NULL) {
 			continue; // Hal_Button_Normal置1说明没有任何事件产生
 		}
-		for (button_event i = BUTTON_UP; i < BUTTON_EVENT_MAX;
-		     ++i) {
+		for (button_event i = BUTTON_UP; i < BUTTON_EVENT_MAX; ++i) {
 			if (BUTTON_BIT_READ(btn->event, i)) {
 				btn->callback_fn(i);
 			}

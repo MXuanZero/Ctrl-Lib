@@ -28,7 +28,8 @@ typedef enum {
 	BUTTON_EVENT_MAX,
 } button_event;
 
-typedef void (*button_callback_fn)(button_event);
+typedef void (*button_callback_fn)(button_event e);
+typedef bool (*button_read_io_fn)(uint8_t id);
 
 typedef struct button_handle {
 	struct button_handle *next;
@@ -46,6 +47,7 @@ typedef struct button_handle {
 
 typedef struct button_group_handle {
 	struct button_handle *first;
+	button_read_io_fn read_io_fn;
 	uint32_t tick; // 时刻
 	uint8_t num; // 按键组数量
 } button_group_t;
@@ -80,11 +82,6 @@ void button_update_tick(button_group_t *btn_group, uint32_t tick);
  * @brief 按键任务
  */
 void button_handler(button_group_t *btn_group);
-
-/**
- * @brief 按键移植
- */
-bool button_prot_read_io(uint8_t id);
 
 #ifdef __cplusplus
 }
