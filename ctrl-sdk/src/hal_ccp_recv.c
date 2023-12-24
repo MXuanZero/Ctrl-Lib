@@ -26,7 +26,7 @@ void hal_ccp_recv_init(hal_ccp_recv_handle_t *recv, uint8_t id,
 	hal_ccp_recv_prot_init(recv);
 }
 
-void hal_ccp_recvGroup_reg(hal_ccp_recv_group_handle_t *group,
+void hal_ccp_recv_group_reg(hal_ccp_recv_group_handle_t *group,
 			   hal_ccp_recv_handle_t *recv)
 {
 	if (group == NULL || recv == NULL) {

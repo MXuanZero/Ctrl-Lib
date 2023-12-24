@@ -29,7 +29,7 @@ typedef enum {
 } button_event;
 
 typedef void (*button_callback_fn)(button_event e);
-typedef bool (*button_read_io_fn)(uint8_t id);
+typedef bool (*button_read_io_fn)(uint8_t id); // 按下返回1
 
 typedef struct button_handle {
 	struct button_handle *next;
@@ -55,18 +55,22 @@ typedef struct button_group_handle {
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-
 /**
  * @brief 按键动态创建函数
  */
-button_t *button_init(uint8_t id, uint32_t lpt, uint32_t dct,
-			  button_callback_fn cb_fn);
+button_t *button_create(uint8_t id, uint32_t lpt, uint32_t dct,
+			button_callback_fn cb_fn);
 
 /**
  * @brief 按键静态创建函数
  */
-void button_init_stiaic(button_t *btn, uint8_t id, uint32_t lpt,
-			uint32_t dct, button_callback_fn cb_fn);
+void button_create_stiaic(button_t *btn, uint8_t id, uint32_t lpt, uint32_t dct,
+			  button_callback_fn cb_fn);
+
+/**
+ * @brief 按键状态检测函数
+ */
+void button_set_read_io(button_group_t *btn_group, button_read_io_fn fn);
 
 /**
  * @brief 按键注册函数

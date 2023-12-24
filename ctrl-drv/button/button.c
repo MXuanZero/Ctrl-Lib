@@ -24,8 +24,8 @@
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-button_t *button_init(uint8_t id, uint32_t lpt, uint32_t dct,
-		      button_callback_fn cb_fn)
+button_t *button_create(uint8_t id, uint32_t lpt, uint32_t dct,
+			button_callback_fn cb_fn)
 {
 	button_t *btn = malloc(DEF_HAL_BUTTON_T_SIZE);
 	if (btn == NULL) {
@@ -41,8 +41,8 @@ button_t *button_init(uint8_t id, uint32_t lpt, uint32_t dct,
 	return btn;
 }
 
-void button_init_stiaic(button_t *btn, uint8_t id, uint32_t lpt, uint32_t dct,
-			button_callback_fn cb_fn)
+void button_create_stiaic(button_t *btn, uint8_t id, uint32_t lpt, uint32_t dct,
+			  button_callback_fn cb_fn)
 {
 	if (btn == NULL) {
 		return;
@@ -174,3 +174,51 @@ void button_handler(button_group_t *btn_group)
 		BUTTON_BIT_SET(btn->event, BUTTON_NORMAL);
 	}
 }
+
+#if BUTTON_TEST
+
+button_group_t group = { 0 };
+button_t btn = { 0 };
+
+bool button_read_io(uint8_t id)
+{
+	switch (id) {
+	case 1:
+		return 0; // 按下返回1
+	default:
+		return 0;
+	}
+}
+
+void button_callback(button_event e)
+{
+	switch (e) {
+	case BUTTON_CLICK:
+		// 按键按下
+		break;
+	case BUTTON_LONG_PRESS:
+		// 长按
+		break;
+	default:
+		break;
+	}
+}
+
+void button_init(void)
+{
+	button_create_stiaic(&btn, 1, 800, 300, button_callback);
+	button_reg(&group, &btn);
+	button_set_read_io(&group, button_read_io);
+}
+
+void button_main(void)
+{
+	button_init();
+	while (1) {
+		button_update_tick(&group, 10); // 放入定时器中
+		delay_ms(10);
+		button_handler(&group); // 主循环
+	}
+}
+
+#endif
