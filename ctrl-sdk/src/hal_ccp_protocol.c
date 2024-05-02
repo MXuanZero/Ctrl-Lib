@@ -145,4 +145,5 @@ void hal_ccp_protocol_parse(uint8_t *pack, uint16_t pack_size)
 			break;
 		}
 	}
+	(void)tail;
 }

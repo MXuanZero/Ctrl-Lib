@@ -32,12 +32,19 @@ typedef struct hal_ccp_recv_data_t {
 
 typedef void (*hal_ccp_recv_processing_fn)(uint8_t *, uint16_t);
 
+/* 需要再此函数中更新original的长度，更新dma接收的存储地址 */
+typedef void (*hal_ccp_recv_update_fn)(hal_ccp_recv_data_t *next);
+
 typedef struct hal_ccp_recv_handle_t {
 	struct hal_ccp_recv_handle_t *next; // 下一指针
 	hal_ccp_recv_processing_fn processing_fn; // 数据处理函数
+	hal_ccp_recv_update_fn update_fn;
+
+	hal_ccp_recv_data_t data[HAL_CCP_RECV_BUF_NUM];
+
 	lib_queue_static_t queue; // 输出队列
-	hal_ccp_recv_data_t data[HAL_CCP_RECV_BUF_NUM]; // 缓存
-	hal_ccp_recv_data_t buffer;
+	hal_ccp_recv_data_t *queue_buffer[HAL_CCP_RECV_BUF_NUM]; // 缓存
+	uint16_t p;
 	uint8_t id;
 } hal_ccp_recv_handle_t;
 
@@ -52,13 +59,14 @@ typedef struct hal_ccp_recv_group_handle_t {
  * @brief 初始化
  */
 void hal_ccp_recv_init(hal_ccp_recv_handle_t *recv, uint8_t id,
-		       hal_ccp_recv_processing_fn fn);
+		       hal_ccp_recv_processing_fn fn,
+		       hal_ccp_recv_update_fn update_fn);
 
 /**
  * @brief 注册
  */
 void hal_ccp_recv_group_reg(hal_ccp_recv_group_handle_t *group,
-			   hal_ccp_recv_handle_t *recv);
+			    hal_ccp_recv_handle_t *recv);
 
 /**
  * @brief 数据接收

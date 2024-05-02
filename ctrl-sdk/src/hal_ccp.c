@@ -366,6 +366,7 @@ hal_ccp_status hal_ccp_clear_cache(uint8_t *pack, uint16_t len)
 			}
 		}
 	}
+	(void)tail;
 HAL_CCP_RECEIVE_TASK:
 	return HAL_CCP_TRUE;
 }
