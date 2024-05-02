@@ -72,7 +72,7 @@ void hal_ccp_recv_group_reg(hal_ccp_recv_group_handle_t *group,
  * @brief 数据接收
  * @note  一般写在接收完成中断中
  */
-hal_ccp_recv_status hal_ccp_recv_handler(hal_ccp_recv_handle_t *recv);
+hal_ccp_recv_status hal_ccp_recv_handler(hal_ccp_recv_handle_t *recv, uint16_t rx_len);
 
 /**
  * @brief 输出处理

@@ -29,6 +29,7 @@ void hal_ccp_recv_init(hal_ccp_recv_handle_t *recv, uint8_t id,
 			      sizeof(hal_ccp_recv_data_t *),
 			      HAL_CCP_RECV_BUF_NUM);
 	hal_ccp_recv_prot_init(recv);
+	recv->update_fn(&recv->data[recv->p]);
 }
 
 void hal_ccp_recv_group_reg(hal_ccp_recv_group_handle_t *group,
@@ -56,7 +57,7 @@ void hal_ccp_recv_group_reg(hal_ccp_recv_group_handle_t *group,
 	++group->num;
 }
 
-hal_ccp_recv_status hal_ccp_recv_handler(hal_ccp_recv_handle_t *recv)
+hal_ccp_recv_status hal_ccp_recv_handler(hal_ccp_recv_handle_t *recv, uint16_t rx_len)
 {
 	lib_queue_status state;
 	hal_ccp_recv_data_t *data;
@@ -66,7 +67,8 @@ hal_ccp_recv_status hal_ccp_recv_handler(hal_ccp_recv_handle_t *recv)
 
 	HAL_CCP_RECV_LOCK();
 	data = &recv->data[recv->p]; // 保存当前位置
-	state = lib_queue_static_push(&recv->queue, data);
+	data->size = rx_len;
+	state = lib_queue_static_push(&recv->queue, &data);
 	recv->p++;
 	recv->p = recv->p < HAL_CCP_RECV_BUF_NUM ? recv->p : 0;
 	recv->update_fn(&recv->data[recv->p]);

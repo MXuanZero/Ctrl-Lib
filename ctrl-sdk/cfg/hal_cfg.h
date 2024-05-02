@@ -25,8 +25,8 @@ typedef enum hal_ccp_order {
 } Hal_Ccp_Order;
 
 /* ccp recv */
-#define HAL_CCP_RECV_DATA_SIZE 48 // 最大接收长度
-#define HAL_CCP_RECV_BUF_NUM 3 // 接收缓存队列
+#define HAL_CCP_RECV_DATA_SIZE 64 // 最大接收长度
+#define HAL_CCP_RECV_BUF_NUM 4 // 接收缓存队列
 #define HAL_CCP_RECV_LOCK_ENABLE 0 // 是否启用互斥锁，1为启用
 
 #endif // HAL_CFG_H
